@@ -1,1 +1,1 @@
-# from sparsemedoid import medoids
+# from sparsemedoid import clustering

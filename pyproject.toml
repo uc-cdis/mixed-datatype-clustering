@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sparsemedoid"
 version = "0.1.0"
-description = "Sparse K-Medoid clustering for mixed datatypes"
+description = "K-Medoid clustering and feature selection for mixed datatypes"
 authors = ["Your Name <you@example.com>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -10,7 +10,7 @@ repository = "https://github.com/jmontmaxwell/sparse-kmedoids"
 keywords=["PAM", "k-medoids", "mixed-datatypes", "sparse"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 scikit-learn = "^1.1.1"
 pandas = "^1.4.2"
 numpy = "^1.22.4"
