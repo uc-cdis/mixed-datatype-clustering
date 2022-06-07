@@ -1,4 +1,8 @@
-# Develop Sparse PAM Clustering by substituting PAM (k-medoids-based) clustering for k-means clustering in sparse k-means clustering algorithm  mentioned in this paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/
+# A Collection of k-medoid clustering and feature selection methods for mixed datatypes 
+
+The first method is Sparse KMedoids Clustering which can use either of scikit-learn KMedoids 
+clustering algorithms ('pam' or 'alternate'). This k-medoids method is based off of the sparse 
+k-means clustering algorithm defined in this paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/
 
 ## Some important notes on the functions and Sparse K-Medoids method
 
@@ -15,13 +19,21 @@
     max_iter -> Max iterations used in sklearn_extra.cluster.KMedoids
     random_state -> If init = 'random' the random state seed used in sklearn_extra.cluster.KMedoids 
 
-#### sparse_kmedoids
+#### clustering.sparse_kmedoids
 
     1) Calculates a generalized NxNxP featurewise distance matrix
     2) Calculate the weighted distance matrix using evenly weighted features
     3) Iteratively alternates between:
         i) Clustering 
         ii) Recalculating feature weights and weighted distance matrix 
+
+    Returns the feature weights, cluster labels, the summed differences in feature weights on the final iteration, 
+    and the order of the features in the feature weight vector. 
+
+    The order of the features is recorded because regardless of the order the P features are given in the 
+    original data matrix, the new data matrix is rearraged so that all of the numerical features are first, followed by
+    the binary features and then the categorical features. The order of features is maintained amongst each relative
+    feature type (i.e. numerical features maintain their order relative to each other).
 
 ### Important Sub Functions:
 
