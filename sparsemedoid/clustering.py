@@ -5,15 +5,12 @@ from sparsemedoid.distfuncs import (
 from sparsemedoid.subfuncs import sort_datatypes, kmedoid_clusters, update_weights
 
 import numpy as np
-from scipy.sparse import issparse
 
 
 def sparse_kmedoids(
     X, distance_type, k, s, max_attempts, method, init, max_iter=None, random_state=None
 ):
 
-    if issparse(X):
-        raise TypeError("Sparse matrices are not supported!")
     if init == "random" and random_state is None:
         raise ValueError("Using `random` with no `random_state` seed")
     if s <= 1.0:
