@@ -2,7 +2,7 @@
 name = "sparsemedoid"
 version = "0.1.0"
 description = "K-Medoid clustering and feature selection for mixed datatypes"
-authors = ["Your Name <you@example.com>"]
+authors = ["J Montgomery Maxwell jmontmaxwell@uchicago.edu"]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = ""
