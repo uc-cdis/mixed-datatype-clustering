@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from pysparsemedoid import distfuncs, sparsefuncs
+from sparsemedoid import distfuncs, subfuncs
 
 
 class test_subfuncs(unittest.TestCase):
@@ -18,11 +18,11 @@ class test_subfuncs(unittest.TestCase):
         )
 
         cls1 = np.array([1, 0, 1])
-        actual1 = sparsefuncs.between_medoid_sum_distances(X_diss, cls1)[0]
+        actual1 = subfuncs.between_medoid_sum_distances(X_diss, cls1)[0]
         expected1 = np.array([13.0 / 36.0, 1.0 / 9.0, 4.0 / 9.0])
 
         cls2 = np.array([1, 1, 0])
-        actual2 = sparsefuncs.between_medoid_sum_distances(X_diss, cls2)[0]
+        actual2 = subfuncs.between_medoid_sum_distances(X_diss, cls2)[0]
         expected2 = np.array([1.0 / 9.0, 5.0 / 18.0, 1.0 / 9.0])
 
         np.testing.assert_almost_equal(expected1, actual1)
@@ -38,9 +38,9 @@ class test_subfuncs(unittest.TestCase):
         expected2 = np.array([0.3, 2.4, 0, 0.005, 0])
         expected3 = np.array([0, 0, 0, 0, 0])
 
-        actual1 = sparsefuncs.positive_part(x1)
-        actual2 = sparsefuncs.positive_part(x2)
-        actual3 = sparsefuncs.positive_part(x3)
+        actual1 = subfuncs.positive_part(x1)
+        actual2 = subfuncs.positive_part(x2)
+        actual3 = subfuncs.positive_part(x3)
 
         np.testing.assert_almost_equal(expected1, actual1)
         np.testing.assert_almost_equal(expected2, actual2)
@@ -58,8 +58,8 @@ class test_subfuncs(unittest.TestCase):
             [0, 0.2 / np.sqrt(11.29), 1.5 / np.sqrt(11.29), 3 / np.sqrt(11.29)]
         )
 
-        actual1 = sparsefuncs.scale_weights(x1)
-        actual2 = sparsefuncs.scale_weights(x2)
+        actual1 = subfuncs.scale_weights(x1)
+        actual2 = subfuncs.scale_weights(x2)
 
         np.testing.assert_almost_equal(expected1, actual1)
         np.testing.assert_almost_equal(expected2, actual2)
@@ -72,10 +72,10 @@ class test_subfuncs(unittest.TestCase):
         x2 = np.array([-1, 3.2, -0.23, 10, 1.4, -1.9])
         d2 = 1.3
 
-        actual1 = sparsefuncs.soft_thresholding(x1, d1)
+        actual1 = subfuncs.soft_thresholding(x1, d1)
         expected1 = np.array([0.2, 1.2, -3.2, 0, 0, 0.6])
 
-        actual2 = sparsefuncs.soft_thresholding(x2, d2)
+        actual2 = subfuncs.soft_thresholding(x2, d2)
         expected2 = np.array([0, 1.9, 0, 8.7, 0.1, -0.6])
 
         np.testing.assert_almost_equal(expected1, actual1)
@@ -95,9 +95,9 @@ class test_subfuncs(unittest.TestCase):
         expected2 = 0.0
         expected3 = 0.4352068
 
-        actual1 = sparsefuncs.binary_search(a1, s1)
-        actual2 = sparsefuncs.binary_search(a2, s2)
-        actual3 = sparsefuncs.binary_search(a3, s3)
+        actual1 = subfuncs.binary_search(a1, s1)
+        actual2 = subfuncs.binary_search(a2, s2)
+        actual3 = subfuncs.binary_search(a3, s3)
 
         self.assertEqual(expected1, actual1)
         self.assertEqual(expected2, actual2)

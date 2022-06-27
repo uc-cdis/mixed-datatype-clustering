@@ -1,5 +1,8 @@
 import numpy as np
+from scipy.linalg import sqrtm, inv
+
 from sklearn_extra.cluster import KMedoids
+from sparsemedoid.distfuncs import weighted_distance_matrix
 
 
 def sort_datatypes(X, p):
@@ -135,3 +138,114 @@ def positive_part(bmsd):
 def scale_weights(unscaled_weights):
 
     return unscaled_weights / np.linalg.norm(unscaled_weights)
+
+
+def spectral_feature_selection(per_feature_distances, k, distance_type, feature_counts):
+    n = per_feature_distances.shape[1]
+    p = per_feature_distances.shape[0]
+
+    weights = np.ones(p) * (1 / np.sqrt(p))
+    weighted_distances = weighted_distance_matrix(
+        per_feature_distances, weights, distance_type, feature_counts
+    )
+    # Calulate the similarity matrix
+    max_dist = np.max(weighted_distances)
+    Ones = np.ones((n, n))
+    W = Ones - (weighted_distances / max_dist)
+
+    # Calculate the Normalized Laplacian of W
+    Lnorm = normalized_laplacian(W)
+
+    # Calculate spctrum of normalized laplacian
+    spectrum = laplacian_spectrum(Lnorm)
+
+    tau = np.sum(spectrum[1 : k + 1])  # Normalization term tau
+
+    # Spectral gap score for all features
+    gamma = spectral_gap_score(spectrum, tau, k)
+
+    phi = dict()
+    for feat in range(0, p):
+
+        per_feature_distances0 = np.concatenate(
+            (
+                per_feature_distances[:feat, :, :],
+                per_feature_distances[feat + 1 :, :, :],
+            )
+        )
+        if feat < feature_counts["Numeric"] and feature_counts["Numeric"] > 0:
+            feature_counts["Numeric"] = feature_counts["Numeric"] - 1
+            weighted_distances = weighted_distance_matrix(
+                per_feature_distances0, weights, distance_type, feature_counts
+            )
+            feature_counts["Numeric"] = feature_counts["Numeric"] + 1
+        elif (
+            feat < feature_counts["Numeric"] + feature_counts["Binary"]
+            and feature_counts["Binary"] > 0
+        ):
+            feature_counts["Binary"] = feature_counts["Binary"] - 1
+            weighted_distances = weighted_distance_matrix(
+                per_feature_distances0, weights, distance_type, feature_counts
+            )
+            feature_counts["Binary"] = feature_counts["Binary"] + 1
+        else:
+            feature_counts["Categoric"] = feature_counts["Categoric"] - 1
+            weighted_distances = weighted_distance_matrix(
+                per_feature_distances0, weights, distance_type, feature_counts
+            )
+            feature_counts["Categoric"] = feature_counts["Categoric"] + 1
+
+        # Calulate the similarity matrix
+        max_dist = np.max(weighted_distances)
+        Ones = np.ones((n, n))
+        W = Ones - (weighted_distances / max_dist)
+
+        D = np.diag(np.sum(W, 0))
+        L = D - W
+        Lnorm = np.matmul(np.matmul(inv(sqrtm(D)), L), inv(sqrtm(D)))
+
+        eigenvaluess, eigenvectors = np.linalg.eig(Lnorm)
+        spectrum = np.sort(eigenvaluess)
+
+        tau = np.sum(spectrum[1 : k + 1])
+        gamma0 = 0
+        for i in range(1, k + 1):
+            for j in range(i + 1, k + 2):
+                gamma0 += np.abs((spectrum[i] - spectrum[j]) / tau)
+
+        phi[str(feat)] = gamma - gamma0
+
+    weights = dict()
+    for key in phi:
+        if phi[key] <= 0:
+            weights[key] = 0
+        else:
+            weights[key] = phi[key] / max(phi.values())
+
+    return weights
+
+
+def laplacian_spectrum(Lnorm):
+    eigvals, eigvecs = np.linalg.eig(Lnorm)
+    spectrum = np.sort(eigvals)
+
+    return spectrum
+
+
+def spectral_gap_score(spectrum, tau, k):
+    gamma = 0
+    for i in range(1, k + 1):
+        for j in range(i + 1, k + 2):
+            gamma += np.abs((spectrum[i] - spectrum[j]) / tau)
+
+    return gamma
+
+
+def normalized_laplacian(W):
+    D = np.diag(np.sum(W, 0))  # Calculate the diagonal matrix of W
+    L = D - W  # Calulcate the Laplacian matrix of W
+    Lnorm = np.matmul(
+        np.matmul(inv(sqrtm(D)), L), inv(sqrtm(D))
+    )  # Lnorm = D^(-1/2) * L * D(-1/2)
+
+    return Lnorm
