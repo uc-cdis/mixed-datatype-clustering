@@ -1,6 +1,7 @@
 from sparsemedoid.distfuncs import (
     weighted_distance_matrix,
     generalized_distance_function,
+    prototype_distance_function,
 )
 from sparsemedoid.subfuncs import (
     sort_datatypes,
@@ -104,3 +105,56 @@ def spectral_kmedoids(
     )
 
     return cluster_labels, weights, feature_order
+
+
+def sparse_kprototypes(
+    X,
+    distance_type,
+    k,
+    s,
+    max_attempts,
+    init,
+    gamma,
+    n_init=None,
+    max_iter=None,
+    random_state=None,
+):
+
+    if init == "random" and random_state is None:
+        raise ValueError("Using `random` with no `random_state` seed")
+    if s <= 1.0:
+        raise ValueError("Hyperparameter s must be > 1.0")
+
+    n, p = X.shape
+
+    feature_labels = np.zeros(p)
+    for i in range(p):
+        if type(X[0, i]) is str:
+            feature_labels[i] = 1
+
+    numeric_columns = list()
+    nonnumeric_columns = list()
+    for i in range(p):
+        if feature_labels[i] == 0:
+            numeric_columns.append(i)
+        if feature_labels[i] == 1:
+            nonnumeric_columns.append(i)
+
+    x_numeric = np.zeros((len(X), len(numeric_columns)))
+    x_nonnumeric = np.zeros((len(X), len(nonnumeric_columns))).astype(str)
+    x_numeric[:] = X[:, numeric_columns]
+    x_nonnumeric[:] = X[:, nonnumeric_columns]
+
+    feature_order = {
+        "Numerical Features": numeric_columns,
+        "Nonnumeric Features": nonnumeric_columns,
+    }
+
+    feature_counts = {
+        "Numeric": x_numeric.shape[1],
+        "Nonnumeric": x_nonnumeric.shape[1],
+    }
+
+    per_feature_distances = prototype_distance_function(
+        x_numeric, x_nonnumeric, gamma, distance_type
+    )

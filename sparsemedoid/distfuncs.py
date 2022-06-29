@@ -12,12 +12,23 @@ def generalized_distance_function(
     elif distance_type == "podani":
         out = podani_distance(x_numeric, x_categoric, x_binary, feature_counts)
     elif distance_type == "huang":
-        out = huang_distance(x_numeric, x_categoric, x_binary)
+        out = generalized_huang_distance(x_numeric, x_categoric, x_binary)
     else:
         raise ValueError(
             "Not one of the supported distance method types: gower | wishart | podani | huang"
         )
 
+    return out
+
+
+def prototype_distance_function(x_numeric, x_nonnumeric, gamma, distance_type):
+
+    if distance_type == "huang":
+        out = prototype_huang_distance(x_numeric, x_nonnumeric, gamma)
+    else:
+        raise ValueError(
+            "Not one of the supported distance method types: gower | wishart | podani | huang"
+        )
     return out
 
 
@@ -103,7 +114,7 @@ def podani_distance(x_numeric, x_categoric, x_binary, feature_counts):
     return out
 
 
-def huang_distance(x_numeric, x_categoric, x_binary):
+def generalized_huang_distance(x_numeric, x_categoric, x_binary):
 
     alpha = 1.0
     beta = np.mean(np.std(x_numeric, axis=0, ddof=1))
@@ -115,6 +126,15 @@ def huang_distance(x_numeric, x_categoric, x_binary):
     out = np.concatenate(
         [x for x in [out_numeric, out_binary, out_categoric] if x.size > 0]
     )
+
+    return out
+
+
+def prototype_huang_distance(x_numeric, x_nonnumeric, gamma):
+
+    out_numeric = squared_euclidean(x_numeric)
+    out_nonnumerioc = gamma * hamming(x_nonnumeric)
+    out = np.concatenate([x for x in [out_numeric, out_nonnumerioc] if x.size > 0])
 
     return out
 
