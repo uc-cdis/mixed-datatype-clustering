@@ -72,10 +72,10 @@ def update_weights(per_feature_distances, cluster_labels, s):
     X = np.zeros((p, n, n))
     X[:] = per_feature_distances
 
-    bmsd = between_medoid_sum_distances(X, cluster_labels)[0]
-    bmsd = positive_part(bmsd)
-    delta = binary_search(bmsd, s)
-    unscaled_weights = soft_thresholding(bmsd, delta)
+    a = between_medoid_sum_distances(X, cluster_labels)[0]
+    a = positive_part(a)
+    delta = binary_search(a, s)
+    unscaled_weights = soft_thresholding(a, delta)
     scaled_weights = scale_weights(unscaled_weights)
 
     return scaled_weights
