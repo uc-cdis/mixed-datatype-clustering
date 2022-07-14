@@ -23,28 +23,28 @@ def sort_datatypes(X, p):
     # Sort and group all data into 3 new dataframes. One dataframe for each datatype (numeric, categoric, and binary)
 
     numeric_columns = list()
-    categoric_columnms = list()
+    categoric_columns = list()
     binary_columns = list()
     for i in range(p):
         if feature_labels[i] == 0:
             numeric_columns.append(i)
         if feature_labels[i] == 1:
-            categoric_columnms.append(i)
+            categoric_columns.append(i)
         if feature_labels[i] == 2:
             binary_columns.append(i)
 
     x_numeric = np.zeros((len(X), len(numeric_columns)))
     x_binary = np.zeros((len(X), len(binary_columns))).astype(str)
-    x_categoric = np.zeros((len(X), len(categoric_columnms))).astype(str)
+    x_categoric = np.zeros((len(X), len(categoric_columns))).astype(str)
 
     x_numeric[:] = X[:, numeric_columns]
     x_binary[:] = X[:, binary_columns]
-    x_categoric[:] = X[:, categoric_columnms]
+    x_categoric[:] = X[:, categoric_columns]
 
     feature_order = {
         "Numerical Features": numeric_columns,
         "Binary Features": binary_columns,
-        "Categorical Features": categoric_columnms,
+        "Categorical Features": categoric_columns,
     }
 
     return x_numeric, x_binary, x_categoric, feature_order

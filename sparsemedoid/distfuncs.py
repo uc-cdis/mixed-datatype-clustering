@@ -41,7 +41,12 @@ def weighted_distance_matrix(
 
     for k in range(p):  # Apply the feature weights to the distance matrix
         if k < feature_counts["Numeric"]:
-            X[k, :, :] = X[k, :, :] * weights[k]
+            if distance_type == "gower":
+                X[k, :, :] = X[k, :, :] * weights[k]
+            else:
+                X[k, :, :] = X[k, :, :] * weights[k] ** 2
+                # Because Huang, Podani, and Wishart use a squared euclidean distance,
+                # the weights must also be squared following the associative property of multiplication
         elif k < feature_counts["Numeric"] + feature_counts["Binary"]:
             X[k, :, :] = X[k, :, :] * weights[k]
         else:

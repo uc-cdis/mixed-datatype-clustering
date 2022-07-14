@@ -4,13 +4,13 @@ from sklearn.metrics import adjusted_rand_score
 
 from sparsemedoid import clustering
 
-n = 200
-K = 4
+n = 400
+K = 6
 
 A = np.ones([n, 1]).astype(str)
 
 B, target = make_blobs(
-    n_samples=n, n_features=5, centers=K, cluster_std=0.7, shuffle=True
+    n_samples=n, n_features=9, centers=K, cluster_std=0.7, shuffle=True
 )
 
 C = np.ones([n, 1]).astype(str)
@@ -49,24 +49,22 @@ X = np.concatenate((A, B, C), axis=1, dtype=object)
 )
 
 
-"""
-
 cluster_labels2, feature_weights2, feature_order2 = clustering.spectral_kmedoids(
     X,
-    distance_type="gower",
+    distance_type="huang",
     k=K,
     method="pam",
     init="build",
     max_iter=100,
     random_state=None,
 )
-"""
+
 
 print("Sparse ARI = ", adjusted_rand_score(target, cluster_labels1))
-# print("Spectral ARI = ", adjusted_rand_score(target, cluster_labels2))
+print("Spectral ARI = ", adjusted_rand_score(target, cluster_labels2))
 
 print("Sparse Feature weights = ", feature_weights1)
-# print("Spectral Feature weights = ", feature_weights2)
+print("Spectral Feature weights = ", feature_weights2)
 
 print("Sparse Feature Order = ", feature_order1)
-# print("Spectral Feature Order = ", feature_order2)
+print("Spectral Feature Order = ", feature_order2)
