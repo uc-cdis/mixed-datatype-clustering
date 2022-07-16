@@ -32,16 +32,18 @@ for feature in range(0, num_data.shape[1]):
 
 X = np.concatenate((num_data, binary_data), axis=1, dtype=object)
 
-distance_types = ["gower", "wishart", "podani", "huang"]
+# distance_types = ["gower", "wishart", "podani", "huang"]
+distance = "podani"
+K = 5
 
-K = 4
+hyperparams = [1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
 
-cluster_labels = np.zeros((X.shape[0], 4))
-feature_weights = np.zeros((X.shape[1], 4))
+cluster_labels = np.zeros((X.shape[0], len(hyperparams)))
+feature_weights = np.zeros((X.shape[1], len(hyperparams)))
 
 i = 0
-
-for distance in distance_types:
+# for distance in distance_types:
+for S in hyperparams:
 
     """
    spectral_cluster_labels, spectral_feature_weights, spectral_feature_order = clustering.spectral_kmedoids(
@@ -75,26 +77,28 @@ for distance in distance_types:
         X,  # original data NxP
         distance_type=distance,
         k=K,
-        s=1.2,
-        max_attempts=6,
+        s=S,
+        max_attempts=8,
         method="pam",
         init="build",
         max_iter=100,
-        random_state=None,
+        random_state=123,
     )
 
     cluster_labels[:, i] = sparse_cluster_labels
     feature_weights[:, i] = sparse_feature_weights
     i += 1
 
-    print(f"{distance} done")
+    print(f"{S} done")
 
 cluster_labels_df = pd.DataFrame(
-    cluster_labels, columns=["Gower", "Wishart", "Podani", "Huang"]
+    cluster_labels,
+    columns=["1.2", "1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8", "3.0"],
 )
-cluster_labels_df.to_csv(f"sparse_cluster_labels_{K}.csv", index=False)
+cluster_labels_df.to_csv(f"sparse_cluster_labels_{distance}.csv", index=False)
 
 feature_weights_df = pd.DataFrame(
-    feature_weights, columns=["Gower", "Wishart", "Podani", "Huang"]
+    feature_weights,
+    columns=["1.2", "1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8", "3.0"],
 )
-feature_weights_df.to_csv(f"sparse_feature_weights_{K}.csv", index=False)
+feature_weights_df.to_csv(f"sparse_feature_weights_{distance}.csv", index=False)
