@@ -33,7 +33,7 @@ for feature in range(0, num_data.shape[1]):
 X = np.concatenate((num_data, binary_data), axis=1, dtype=object)
 
 # distance_types = ["gower", "wishart", "podani", "huang"]
-distance = "podani"
+distance = "huang"
 K = 5
 
 hyperparams = [1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
