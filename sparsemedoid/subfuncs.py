@@ -165,6 +165,7 @@ def spectral_feature_selection(per_feature_distances, k, distance_type, feature_
     gamma = spectral_gap_score(spectrum, tau, k)
 
     phi = dict()
+    weights0 = np.ones(p - 1) * (1 / np.sqrt(p - 1))
     for feat in range(0, p):
 
         per_feature_distances0 = np.concatenate(
@@ -176,7 +177,7 @@ def spectral_feature_selection(per_feature_distances, k, distance_type, feature_
         if feat < feature_counts["Numeric"] and feature_counts["Numeric"] > 0:
             feature_counts["Numeric"] = feature_counts["Numeric"] - 1
             weighted_distances = weighted_distance_matrix(
-                per_feature_distances0, weights, distance_type, feature_counts
+                per_feature_distances0, weights0, distance_type, feature_counts
             )
             feature_counts["Numeric"] = feature_counts["Numeric"] + 1
         elif (
@@ -185,13 +186,13 @@ def spectral_feature_selection(per_feature_distances, k, distance_type, feature_
         ):
             feature_counts["Binary"] = feature_counts["Binary"] - 1
             weighted_distances = weighted_distance_matrix(
-                per_feature_distances0, weights, distance_type, feature_counts
+                per_feature_distances0, weights0, distance_type, feature_counts
             )
             feature_counts["Binary"] = feature_counts["Binary"] + 1
         else:
             feature_counts["Categoric"] = feature_counts["Categoric"] - 1
             weighted_distances = weighted_distance_matrix(
-                per_feature_distances0, weights, distance_type, feature_counts
+                per_feature_distances0, weights0, distance_type, feature_counts
             )
             feature_counts["Categoric"] = feature_counts["Categoric"] + 1
 
@@ -215,14 +216,14 @@ def spectral_feature_selection(per_feature_distances, k, distance_type, feature_
 
         phi[str(feat)] = gamma - gamma0
 
-    weights = dict()
+    final_weights = dict()
     for key in phi:
         if phi[key] <= 0:
-            weights[key] = 0
+            final_weights[key] = 0
         else:
-            weights[key] = phi[key] / max(phi.values())
+            final_weights[key] = phi[key] / max(phi.values())
 
-    return weights
+    return final_weights
 
 
 def laplacian_spectrum(Lnorm):

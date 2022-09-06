@@ -70,8 +70,6 @@ for distance in distance_types:
             random_state=None,
         )
 
-        print("\t", iter)
-        print(feature_order1)
         Scores[0, iter] = metrics.silhouette_score(
             sparse_weighted_distances, sparse_cluster_labels, metric="precomputed"
         )
@@ -86,7 +84,7 @@ for distance in distance_types:
         )
 
         iter += 1
-        print(f"\t {S} done")
+        print(f"\t {distance} {S} done")
 
     (
         spectral_cluster_labels,
@@ -103,8 +101,6 @@ for distance in distance_types:
         random_state=None,
     )
 
-    print("\t", iter)
-    print(feature_order2)
     Scores[0, iter] = metrics.silhouette_score(
         spectral_weighted_distances, spectral_cluster_labels, metric="precomputed"
     )
@@ -118,11 +114,8 @@ for distance in distance_types:
     weighted_distances_df.to_csv(
         f"generated_data/spectral_{distance}_distance_matrix.csv", index=False
     )
+    print(f"\t {distance} spectral done")
 
-    iter += 1
-    print("\t spectral done")
-
-    print("\t", iter)
     n, p = X.shape
     x_numeric, x_binary, x_categoric, feature_order3 = subfuncs.sort_datatypes(X, p)
     feature_counts = {
@@ -130,7 +123,6 @@ for distance in distance_types:
         "Binary": x_binary.shape[1],
         "Categoric": x_categoric.shape[1],
     }
-    print(feature_order3)
 
     per_feature_distances3 = distfuncs.generalized_distance_function(
         x_numeric, x_binary, x_categoric, distance, feature_counts
@@ -165,7 +157,7 @@ for distance in distance_types:
     all_cluster_labels[:, iter] = norm_cluster_labels
 
     iter += 1
-    print("\t unweighted done")
+    print(f"\t {distance} unweighted done")
 
 
 cols = [
