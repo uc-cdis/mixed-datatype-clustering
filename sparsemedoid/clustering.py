@@ -65,11 +65,8 @@ def sparse_kmedoids(
             np.abs(previous_weights)
         )
 
-    weighted_distances = weighted_distance_matrix(
-        per_feature_distances, weights, distance_type, feature_counts
-    )
 
-    return cluster_labels, weights, weight_difference, feature_order, weighted_distances
+    return cluster_labels, weights, feature_order
 
 
 def spectral_kmedoids(
