@@ -12,7 +12,7 @@ keywords=["PAM", "k-medoids", "mixed-datatypes", "sparse"]
 [tool.poetry.dependencies]
 python = "^3.8"
 scikit-learn = "^1.2.1"
-pandas = "^1.5.1"
+pandas = "^2.0.0"
 numpy = "^1.24.2"
 
 [tool.poetry.dev-dependencies]
