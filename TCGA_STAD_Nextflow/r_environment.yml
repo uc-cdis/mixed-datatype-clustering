@@ -1,0 +1,13 @@
+name: r_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.1.0
+  - r-devtools
+  - bioconductor-biocmanager
+  - bioconductor-genomicdatacommons
+  - bioconductor-maftools
+  - bioconductor-TCGAbiolinks
+  - r-data.table
