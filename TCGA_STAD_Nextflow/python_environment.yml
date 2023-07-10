@@ -1,0 +1,11 @@
+name: mixed_env
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - scipy
+  - pandas
+  - pip
+  - pip:
+    - scikit-learn
+    - scikit-learn-extra
