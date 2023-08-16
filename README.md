@@ -2,7 +2,7 @@
 
 The first method is Sparse KMedoids Clustering which can use either of scikit-learn KMedoids 
 clustering algorithms ('pam' or 'alternate'). This k-medoids method is based off of the sparse 
-k-means clustering algorithm defined in this paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/
+k-means clustering algorithm defined in this paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2930825/. `TCGA_Nextflow` provides a practical example of using this algorithm in a pipeline for analyzing cancer data (more information is available in its separate TCGA_README).
 
 ## Some important notes on the functions and Sparse K-Medoids method
 
@@ -68,5 +68,3 @@ k-means clustering algorithm defined in this paper https://www.ncbi.nlm.nih.gov/
 #### 8) subfuncs.update_weights
 
     Use the featurewise distance matrix and cluster labels to recalculate feature weights
-
-    
