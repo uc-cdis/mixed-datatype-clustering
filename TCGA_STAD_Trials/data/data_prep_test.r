@@ -255,12 +255,14 @@ for (i in my_data) {
         # no differentiation between up/down regulation
         gene_list <- c(fname_tokens)
     }
+    print(gene_list)
     # call calculate singscore for every file name(s)
     calc_singscore(sig_name, stad_se_in, gene_list)
     sig_df <- read.csv(paste0(sig_name, '_stad_test.csv'), row.names=1)
-    sig_df = subset(sig_df, select = c("TotalScore"))
+    sig_df = subset(sig_df, select = c("TotalScore","TotalDispersion"))
     # include TotalDispersion in addition to total score?
     names(sig_df)[1] <- paste0(sig_name,"_Singscore")
+    names(sig_df)[2] <- paste0(sig_name,"_Dispersion")
     # add dataframe to list for merging
     signature_dfs[[length(signature_dfs) + 1]] <- sig_df
     signatures[[length(signatures) + 1]] <- sig_name
@@ -325,6 +327,8 @@ numerical_cols <- c("age_at_diagnosis",
 # add scores from gene expression to numerical datatypes
 for (sig in signatures) {
     numerical_cols[[length(numerical_cols) + 1]] <- paste0(sig, "_Singscore")
+    numerical_cols[[length(numerical_cols) + 1]] <- paste0(sig, "_Dispersion")
+
 }
 all_cols <- c(categorical_cols, binary_cols, numerical_cols)
 subset_df <- merged_df[, all_cols]
