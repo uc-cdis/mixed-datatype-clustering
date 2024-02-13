@@ -13,6 +13,7 @@ from sparsemedoid.distfuncs import (
 )
 from sparsemedoid.subfuncs import sort_datatypes, kmedoid_clusters
 
+
 cluster_std = 3.0
 initial_cluster_seed = 123
 Scores = np.zeros((2, 45))
